@@ -1,0 +1,19 @@
+body {
+    overflow: hidden;
+}
+
+.node circle {
+    fill: rgb(221, 221, 221);
+    stroke: steelblue;
+    stroke-width: 3px;
+   }
+  
+  .node text {
+    font: 17px Arial;
+  }
+  
+  .link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 2px;
+  }

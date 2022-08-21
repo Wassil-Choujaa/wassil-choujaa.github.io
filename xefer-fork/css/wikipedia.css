@@ -1,0 +1,180 @@
+body {
+    font-family: "Trebuchet MS", lucida grande, san serif;
+    font-style: normal;
+    color: #ddd;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    height: 100%;
+    border-top: 3px solid #18416A;
+    overflow: hidden;
+}
+
+html {
+    height: 100%;
+}
+
+.slider-control{
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+}
+
+#header {
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 33%, rgba(255,255,255,1) 67%, rgba(255,255,255,0) 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 99;
+}
+
+#slider-navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#slider-navbar li {
+    float: left;
+    margin: 10px;
+    color: #000;
+    background: #fff;
+    background: rgba(224, 224, 224, 0.5);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+#slider-navbar li:hover {
+
+    background: rgba(209, 209, 209, 0.5);
+
+}
+
+
+#slider-navbar li a {
+    display: block;
+    color: gray;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
+}
+
+
+
+#masthead {
+    border-top: 3px solid #2e333d;
+    padding-top: .5em;
+}
+
+#logo {
+    border-bottom: 1px solid #000000;
+    margin-bottom: 0;
+    text-align: center;
+    width: 30em;
+    margin: 0px auto;
+}
+
+#logo img {
+    border: none;
+}
+
+#opening {
+    margin-top: 5px;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+}
+
+#listvis {
+    overflow-x: hidden;
+}
+
+#infovis {
+    flex: 1;
+}
+
+.slider {
+ }
+
+.zoom-slider {
+ }
+
+.angle-slider {
+ }
+
+svg {
+    width: 100%;
+    height: 100%;
+}
+
+.node {
+    color: #eee;
+    font-size: 12px;
+    font-weight: normal;
+    font-family: "Trebuchet MS", lucida grande, san serif;
+    text-decoration: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.trunk {
+    color: #000;
+    font-size: 11px;
+}
+
+.trunk:hover {
+    color: #eee;
+}
+
+.leaf :hover {
+    color: #2e333d;
+}
+
+.scroll {
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: left;
+}
+
+select {
+    border-radius: 3px 3px 3px 3px;
+    font: 9pt Trebuchet MS;
+    height: 20px;
+    position: relative;
+    top: -1px;
+    vertical-align: middle;
+}
+
+form {
+    position: relative;
+    top: -1px;
+}
+
+input[type="image"] {
+    font: bold 11pt Trebuchet MS;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    vertical-align: middle;
+    opacity: 0.6;
+    border: 1px solid gray;
+    background-color: #404040;
+    min-height: 21px;
+    position: relative;
+}
+
+input[type="image"]:active {
+    opacity: 1;
+}

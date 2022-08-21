@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Xefer Wikipedia Radial Graph</title>
+	<!--[if lt IE 9]><script src="/script/excanvas.compiled.js"></script><![endif]-->
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="https://unpkg.com/compromise@latest/builds/compromise.min.js"></script>
+	<script src="https://unpkg.com/wtf_wikipedia" charset="utf-8"></script>
+	<script src="https://d3js.org/d3.v4.js"></script>
+	<script src='https://unpkg.com/panzoom@8.7.3/dist/panzoom.min.js'></script>
+	<script src="./vendor/d3-context-menu.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="./css/wikipedia.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="./css/d3.css" media="screen" />
+	<link rel="stylesheet" href="./css/context-menu.css">
+	<link rel="stylesheet" href="./css/list.css">
+	<!-- 	<link rel="stylesheet" href="./css/glide.core.min.css">
+	<link rel="stylesheet" href="./css/glide.theme.css"> -->
+
+</head>
+
+<body>
+
+	<div id="opening" class="glide">
+		<div id="listing" style="position: absolute; top: 1em; left: 2em; z-index: 10; text-align: left"></div>
+		<div id="infovis" class="slider-slide">
+
+
+			<svg width="960" height="600"></svg>
+		</div>
+		<!-- <div id="listvis" class="slider-slide">
+			<div id="listvis-container">
+				<nav class="nav"></nav>
+			</div>
+		</div>
+		<div data-glide-el="track" class="glide__track">
+			<ul class="glide__slides">
+				<li class="glide__slide">
+
+				</li>
+				<li class="glide__slide">
+
+				</li>
+
+			</ul>
+		</div>
+		<div class="glide__arrows" data-glide-el="controls">
+			<button class="glide__arrow glide__arrow--left" data-glide-dir="<">
+				<</button> <button class="glide__arrow glide__arrow--right" data-glide-dir=">">>
+			</button>
+		</div>
+		<div class="glide__bullets" data-glide-el="controls[nav]">
+			<button class="glide__bullet" data-glide-dir="=0"></button>
+			<button class="glide__bullet" data-glide-dir="=1"></button>
+		</div>
+	</div> -->
+
+	<div id="header">
+		<div id="masthead">
+			<ul id="slider-navbar">
+				<div id="logo">
+					<a href="https://xefer.com/wikipedia"><img height="40" src="./image/logo.png" alt="xefer"></a>
+				</div>
+			</ul>
+
+		</div>
+
+		<div style="text-align: center">
+			<p style="font-size: 10pt; color: white; margin: 0;">Add one or more comma-separated Wikipedia article
+				titles:</p>
+			<select id="lang">
+				<option value="fr">Français</option>
+				<option value="en">English</option>
+				<option value="de">Deutsch</option>
+				<option value="ja">&#26085;&#26412;&#35486;</option>
+				<option value="es">Español</option>
+				<option value="it">Italiano</option>
+				<option value="ru">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</option>
+			</select>
+			<select id="branch">
+				<option value="5">5 %</option>
+				<option value="10">10 %</option>
+				<option value="25">25 %</option>
+				<option value="50">50 %</option>
+				<option value="75">75 %</option>
+				<option value="100">100 %</option>
+			</select>
+			<form id="title" style="display:inline;vertical-align:middle">
+				<input type="text" id="articleName" style="width: 35em;">
+				<input type="submit" style="display:none"></input>
+			</form>
+			<input type="image" src="./image/submit.png" id="submit"></input>
+			<input type="image" src="./image/random.png" id="random"></input>
+			<input type="image" src="./image/rotatel.png" id="change" title="change viz"></input>
+			<input type="image" src="./image/image.png" id="image" title="generate meta-link"></input>
+			<input type="image" src="./image/info.png" id="info" title="What is this?"></input>
+		</div>
+		<div class="slider-control">
+			<p class="slider angle-slider">
+				<input type="range" min="0" max="360" id="input-angle">
+				<label for="nAngle"> angle = <span id=" angle-value">…</span> </label>
+			</p>
+			<p class="slider zoom-slider">
+				<input type="range" id="input-zoom"">
+			<label for=" nzoom"> zoom = <span id="zoom-value">…</span> </label>
+			</p>
+		</div>
+	</div>
+
+
+ 
+	<script src="./vendor/glide.min.js"></script>
+	<script type="text/javascript" src="./script/graph.js"></script>
+	<script type="text/javascript" src="./script/hierarchy.js"></script>
+	<script type="text/javascript" src="./script/childParent.js"></script>
+	<script type="text/javascript" src="./script/wiki.js"></script>
+	<script src="./script/process.js"></script>
+
+
+</body>
+
+</html>

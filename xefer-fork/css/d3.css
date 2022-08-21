@@ -1,0 +1,77 @@
+.hidden {
+    display: none;
+}
+
+svg {
+     color: #000;
+}
+
+#graph .links {
+    stroke: #999;
+    stroke-opacity: 0.6;
+    stroke-width: 2.5;
+}
+
+#graph .mlinks {
+    stroke: rgba(49, 12, 185, 0.24);
+    stroke-width: 1.5;
+}
+
+#graph line.highlight {
+    stroke: rgb(71, 51, 253);
+    stroke-width: 5px;
+}
+
+#graph .nodes circle {
+    stroke: #fff; 
+}
+
+#graph .nodes circle.highlight {
+    stroke: rgb(71, 51, 253); 
+}
+
+#graph .nodes text.highlight {
+    font-size: 18px;
+}
+
+#graph .nodes {
+    font-size: 5px;
+    color: black;
+}
+
+#graph .nodes .hide {
+    display: none;
+}
+
+#graph .nodes .dezoom {
+    font-size: 11px;
+}
+
+#graph .nodes .dezoom2x {
+    font-size: 17px;
+}
+
+#radial .node circle {
+    fill: #999;
+}
+
+#radial .node text {
+    font: 10px sans-serif;
+}
+
+#radial .node--internal circle {
+    fill: #555;
+}
+
+#radial .node--internal text {
+    text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+}
+
+#radial .link {
+    fill: none;
+    stroke: #555;
+    stroke-opacity: 0.4;
+    stroke-width: 1.5px;
+}
+
+ 
