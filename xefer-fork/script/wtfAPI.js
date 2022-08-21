@@ -18,8 +18,8 @@ async function process(id, langage, percent) {
 
       ls = doc.links();
 
-      
-      ls = articlesToID(ls);
+   
+      ls = linkstoNames(ls);
 
       dictionaryArticleLinks[id] = ls;
 
@@ -42,14 +42,14 @@ async function process(id, langage, percent) {
 }
 
 
-function articlesToID(articles) {
-  var ls = [];
-  var id;
-  articles.forEach(article => {
-    console.log(article)
-
-    id = article.pageID();
-    ls.push(id);
+function linkstoNames(articles) {
+  var ls = []; 
+  var p ;
+  articles.forEach(article => {  
+    if(article.type() =="internal"){ 
+      p = article.page();
+      ls.push(p);
+    }
   });
 
   return ls;
