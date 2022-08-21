@@ -1,6 +1,8 @@
 var see;
 var doct;
 var ls2;
+
+
 async function process(metadata, langage, percent) {
   var ls = []
   //get the wikipedia plaintext with wtf_wikipedia

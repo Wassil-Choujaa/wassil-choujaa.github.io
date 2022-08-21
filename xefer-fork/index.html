@@ -11,6 +11,7 @@
 	<script src="https://d3js.org/d3.v4.js"></script>
 	<script src='https://unpkg.com/panzoom@8.7.3/dist/panzoom.min.js'></script>
 	<script src="./vendor/d3-context-menu.js"></script>
+	<script src="./vendor/d3.layout.cloud.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="./css/wikipedia.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="./css/d3.css" media="screen" />
@@ -71,8 +72,8 @@
 			<p style="font-size: 10pt; color: white; margin: 0;">Add one or more comma-separated Wikipedia article
 				titles:</p>
 			<select id="lang">
-				<option value="fr">Français</option>
 				<option value="en">English</option>
+				<option value="fr">Français</option> 
 				<option value="de">Deutsch</option>
 				<option value="ja">&#26085;&#26412;&#35486;</option>
 				<option value="es">Español</option>
@@ -93,8 +94,9 @@
 			</form>
 			<input type="image" src="./image/submit.png" id="submit"></input>
 			<input type="image" src="./image/random.png" id="random"></input>
-			<input type="image" src="./image/rotatel.png" id="change" title="change viz"></input>
-			<input type="image" src="./image/image.png" id="image" title="generate meta-link"></input>
+
+<!-- 			<input type="image" src="./image/rotatel.png" id="change" title="change viz"></input>
+			<input type="image" src="./image/image.png" id="image" title="generate meta-link"></input> -->
 			<input type="image" src="./image/info.png" id="info" title="What is this?"></input>
 		</div>
 		<div class="slider-control">

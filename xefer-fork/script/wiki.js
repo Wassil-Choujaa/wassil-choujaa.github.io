@@ -4,18 +4,24 @@ var graph = {
     "links": [],
     "mLinks": []
 };
-var graphType = "graph";
-var radialClusterType = "radial Cluster"
-var childParent = "childParent";
-var vizType = [graphType, childParent];
-var typeIndex = 0;
-var type = vizType[typeIndex];
+
+
+const VIZTYPE = {
+	graph: "graph",
+	wordCloud: "wordCloud",
+	radialCluster: "radialCluster" 
+} 
+
+ 
+var vizType = VIZTYPE.wordCloud;
+var typeIndex = 0; 
 var aticleQueue = [];
 var root;
 var articleInterval = 21;
 var articleLinkIntervalfloat = 7;
 var lang;
 var sliderController;
+
 var rootDictionary = {
     'en': {
         id: 13692155,
@@ -53,25 +59,21 @@ var dictionaryLink = {};
 // contain all article ?
 var articleLink = [];
 
-$(document).ready(function () {
-    //new Glide('.glide').mount()
 
+// main program
+$(document).ready(function () { 
 
-    lang = "fr";
+    lang = "en";
     loadRoot(rootDictionary[lang]);
 
     init();
     initGraph();
     initChildParent();
-    displayType();
+ 
 
     $("#submit").click(onSubmit);
     $('#title').submit(onSubmit);
-    $("#change").click(function () {
-        typeIndex = (typeIndex + 1) % vizType.length;
-        displayType();
-        restartVisualisation();
-    });
+ 
 
     $('#branch').change(function () {
         maxLink = $('#branch').val();
@@ -85,40 +87,74 @@ $(document).ready(function () {
         restartVisualisation();
     });
 
-    $('#image').click(function () {
-        restartVisualisation();
-
-        if (searching) return;
-        // on image click load metalink
-        articleLinkInterval(articleLink);
-        restartChildParent();
-    });
+ 
 
     setInterval(articleQueueInterval, articleInterval);
 });
-
 function loadRoot(node) {
     root = node;
     graph.nodes.push(node);
 }
 
-function displayType() {
-    type = vizType[typeIndex];
+// visualisation
 
-    if (type == graphType) {
-        d3.select("#graph").attr("class", "");
-        d3.select("#radial").attr("class", "hidden");
-        d3.select("#childParent").attr("class", "");
-    } else if (type == radialClusterType) {
-        d3.select("#graph").attr("class", "hidden");
-        d3.select("#childParent").attr("class", "hidden");
-        d3.select("#radial").attr("class", "");
-    } else if (type == childParent) {
-        d3.select("#graph").attr("class", "hidden");
-        d3.select("#radial").attr("class", "hidden");
-        d3.select("#childParent").attr("class", "");
+function restartVisualisation(resimulate) {
+    //restartChildParent();
+
+    if (vizType == VIZTYPE.graph) {
+        restart(resimulate);
+    } else if (vizType == VIZTYPE.radialCluster) {
+        restartRadial();
+    }else if (vizType == VIZTYPE.wordCloud) {
+        displayWordCloud();
     }
 }
+
+
+function displayNode(text, metadata) {
+    articleLink.push(metadata);
+    var atExistingNode = isNodeExist(metadata);
+
+    addToScroll(3000, metadata.name + (atExistingNode ? " (&middot;)" : ""));
+
+    if (!atExistingNode) {
+
+        addNode(metadata);
+        addLink(metadata, root);
+
+    }
+
+    if (metadata.previous != null) {
+
+        removeLink(metadata.previous, root);
+
+        if (atExistingNode) {
+            var previous = metadata.previous;
+            metadata = d3.select('#name' + metadata.id).data()[0];
+            metadata.previous = previous;
+        }
+
+        addLink(metadata, metadata.previous);
+    }
+
+
+    restartVisualisation(true);
+
+    return atExistingNode;
+}
+
+// UI handlers
+ 
+
+function addToScroll(fade, name) {
+    var spanner = $('<span class="scroll">' + name + '<br/></span>')
+    $('#listing').append(spanner);
+    $('#listing>span').fadeOut(fade, function () {
+        $(this).remove();
+    });
+}
+
+// Event Handler
 
 function onSubmit(e) {
     e.preventDefault();
@@ -134,6 +170,9 @@ function onSubmit(e) {
     return false;
 }
 
+
+
+// article processing
 
 function articleQueueInterval() {
     var link = aticleQueue.pop();
@@ -183,37 +222,6 @@ function updateDictionay(articleList) {
 
 
 
-function displayNode(text, metadata) {
-    articleLink.push(metadata);
-    var atExistingNode = isNodeExist(metadata);
-
-    addToScroll(3000, metadata.name + (atExistingNode ? " (&middot;)" : ""));
-
-    if (!atExistingNode) {
-
-        addNode(metadata);
-        addLink(metadata, root);
-
-    }
-
-    if (metadata.previous != null) {
-
-        removeLink(metadata.previous, root);
-
-        if (atExistingNode) {
-            var previous = metadata.previous;
-            metadata = d3.select('#name' + metadata.id).data()[0];
-            metadata.previous = previous;
-        }
-
-        addLink(metadata, metadata.previous);
-    }
-
-
-    restartVisualisation(true);
-
-    return atExistingNode;
-}
 
 async function loadArticleLink(metadata) {
     if (!metadata) return;
@@ -238,15 +246,7 @@ async function loadArticleLink(metadata) {
 
 }
 
-function restartVisualisation(resimulate) {
-    //restartChildParent();
 
-    if (type == graphType) {
-        restart(resimulate);
-    } else if (type == radialClusterType) {
-        restartRadial();
-    }
-}
 
 async function loadArticle(title, previousMetadata) {
 
@@ -296,13 +296,6 @@ function extractField(data, previousMetadata) {
     return metadata;
 }
 
-function addToScroll(fade, name) {
-    var spanner = $('<span class="scroll">' + name + '<br/></span>')
-    $('#listing').append(spanner);
-    $('#listing>span').fadeOut(fade, function () {
-        $(this).remove();
-    });
-}
 
 function entry(text, metadata) {
 
