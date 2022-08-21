@@ -1,9 +1,4 @@
 var maxLink = 5;
-var graph = {
-    "nodes": [],
-    "links": [],
-    "mLinks": []
-};
 
 
 const VIZTYPE = {
@@ -17,7 +12,7 @@ var vizType = VIZTYPE.wordCloud;
 var typeIndex = 0; 
 var aticleQueue = [];
 var root;
-var articleInterval = 21;
+var articleIntervalDuration = 21;
 var articleLinkIntervalfloat = 7;
 var lang;
 var sliderController;
@@ -54,11 +49,10 @@ var rootDictionary = {
 };
 var searching = false;
 // contain definition of articles
-var dictionary = {};
-var dictionaryLink = {};
+
 // contain all article ?
 var articleLink = [];
-
+ 
 
 // main program
 $(document).ready(function () { 
@@ -66,9 +60,6 @@ $(document).ready(function () {
     lang = "en";
     loadRoot(rootDictionary[lang]);
 
-    init();
-    initGraph();
-    initChildParent();
  
 
     $("#submit").click(onSubmit);
@@ -87,10 +78,9 @@ $(document).ready(function () {
         restartVisualisation();
     });
 
- 
-
-    setInterval(articleQueueInterval, articleInterval);
+    setInterval(processArticleQueue, articleIntervalDuration);
 });
+
 function loadRoot(node) {
     root = node;
     graph.nodes.push(node);
@@ -99,8 +89,7 @@ function loadRoot(node) {
 // visualisation
 
 function restartVisualisation(resimulate) {
-    //restartChildParent();
-
+ 
     if (vizType == VIZTYPE.graph) {
         restart(resimulate);
     } else if (vizType == VIZTYPE.radialCluster) {
@@ -113,7 +102,7 @@ function restartVisualisation(resimulate) {
 
 function displayNode(text, metadata) {
     articleLink.push(metadata);
-    var atExistingNode = isNodeExist(metadata);
+    var atExistingNode = dictionaryID.has(metadata);
 
     addToScroll(3000, metadata.name + (atExistingNode ? " (&middot;)" : ""));
 
@@ -163,9 +152,12 @@ function onSubmit(e) {
     if (names == "") return false;
 
     for (i = 0; i < names.length; i++) {
+
         var pageName = names[i];
         aticleQueue.unshift(pageName);
+
     }
+
 
     return false;
 }
@@ -174,16 +166,19 @@ function onSubmit(e) {
 
 // article processing
 
-function articleQueueInterval() {
+function processArticleQueue() {
     var link = aticleQueue.pop();
     if (link) {
+        //for each article
         loadArticle(link).then(function (metadata) {
-            if (metadata) {
-                process(metadata, lang, maxLink).then(function (links) {
-                     
+            if (metadata) { 
+                process(metadata, lang, maxLink).then(function (links) { 
+                    // load all articles inside it
                     for (var j = 0; j < links.length; j++) {
                         var linkName = links[j].page();
                         loadArticle(linkName);
+                        if(j%100 == 0 ) processArticleLink(articleLink);
+
                     }
                 });
             }
@@ -191,9 +186,13 @@ function articleQueueInterval() {
     }
 }
 
-function articleLinkInterval(articles) {
+function processArticleLink() {
+    console.log("buliding metadata links");
+    if(searching) return;
     searching = true;
     var count = 0;
+    articles = articleLink;
+    clearMLinks();
     var interval = setInterval(() => { 
         if (count == articles.length) {
             clearInterval(interval);
@@ -201,9 +200,9 @@ function articleLinkInterval(articles) {
             restartVisualisation(true);
 
         } else {
+            // main loop
             var article = articles[count];
             loadArticleLink(article);
-            restartChildParent();
         }
         count++;
     }, articleLinkIntervalfloat);
@@ -217,7 +216,7 @@ function updateDictionay(articleList) {
             processSummary(metadata, lang);
         }
     });
-    restartChildParent();
+ 
 }
 
 
@@ -225,20 +224,20 @@ function updateDictionay(articleList) {
 
 async function loadArticleLink(metadata) {
     if (!metadata) return;
-    var notExist = !isNodeExist(metadata)
+    var notExist = !dictionaryID.has(metadata)
     if (notExist) return; // if deleted during async call
 
     process(metadata, lang).then(function (val) {
-        notExist = !isNodeExist(metadata)
+        notExist = !dictionaryID.has(metadata)
         if (notExist) return; // if deleted during async call
         var nameList = val;
 
         for (var j = 0; j < nameList.length; j++) {
             var linkName = nameList[j].page();
-            exist = isNodeExistByName(linkName)
+            exist = dictionaryID.hasByName(linkName)
             if (exist) {
                 var metadataLink = metadataByName(linkName);
-                addMlink(metadata, metadataLink);
+                addMetaLink(metadata, metadataLink);
             }
         }
     });
@@ -247,7 +246,7 @@ async function loadArticleLink(metadata) {
 }
 
 
-
+// loard article, return 
 async function loadArticle(title, previousMetadata) {
 
     var metadata = metadataByName(title);
@@ -299,7 +298,7 @@ function extractField(data, previousMetadata) {
 
 function entry(text, metadata) {
 
-    if (displayNode(text, metadata)) {
+    if (dictionaryID.has(metadata)) {
         return;
     }
 
