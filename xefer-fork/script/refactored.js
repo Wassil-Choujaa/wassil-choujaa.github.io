@@ -1,66 +1,45 @@
+var depth = 2;
+var articleIntervalDuration = 21;
+var linksIntervalDuration = 2500;
+
+var aticleQueue = [];
+var maxLink = 5; //in percent
+var linkRankDict = new Map(); // list of all article sorted by rank where rank is defined by amount of intralinks it has
+var updating = false;
 
 
-var rootDictionary = {
-    'en': {
-        id: 13692155,
-        name: "Philosophy"
-    },
-    'de': {
-        id: 490244,
-        name: "Philosophie"
-    },
-    'fr': {
-        id: 2403,
-        name: "Philosophie"
-    },
-    'ja': {
-        id: 110,
-        name: "&#21746;&#23398;"
-    },
-    'it': {
-        id: 1876512,
-        name: "Filosofia"
-    },
-    'es': {
-        id: 689592,
-        name: "Filosof&iacute;a"
-    },
-    'ru': {
-        id: 904,
-        name: "&#1060;&#1080;&#1083;&#1086;&#1089;&#1086;&#1092;&#1080;&#1103;"
-    }
-};
 
 $(document).ready(function () {
-
     lang = "en";
     // set root node
     root = node;
     graph.nodes.push(node);
     HandleEvents();
     setInterval(processArticleQueue, articleIntervalDuration);
+    setInterval(processLinksAlgorithm, linksIntervalDuration);
+
 });
 
 
 // EVENT HANDLERS
 
-function HandleEvents() { 
+function HandleEvents() {
     $("#submit").click(onSubmit);
-    $('#title').submit(onSubmit); 
-    $('#branch').change(onPercentChange); 
+    $('#title').submit(onSubmit);
+    $('#branch').change(onPercentChange);
     $('#lang').change(onLanguageChange);
 }
 
 function onPercentChange() {
-    maxLink = $('#branch').val(); 
+    maxLink = $('#branch').val();
+    console.log(maxLink);
+
 }
 
 function onLanguageChange() {
     clearGraph();
     $('#articleName').val("");
     lang = $('#lang').val();
-    loadRoot(rootDictionary[lang])
-    restartVisualisation();
 }
 
 
@@ -70,9 +49,9 @@ function onSubmit(e) {
     var names = $('#articleName').val().split(',');
     if (names == "") return false;
 
-    for (i = 0; i < names.length; i++) { 
+    for (i = 0; i < names.length; i++) {
         var pageName = names[i];
-        aticleQueue.unshift(pageName); 
+        aticleQueue.unshift([pageName, 1]);
     }
 
 
@@ -80,57 +59,93 @@ function onSubmit(e) {
 }
 
 
-// WIKIPEDIA LINKS PROCESSING
+// WIKIPEDIA LINKS & ARTICLE PROCESSING
 
 /* 
     process each article from the articleQueue list at a rate of 
     %articleInterval%
 */
 function processArticleQueue() {
-    var link = aticleQueue.pop();
-    if (link) {
-        //for each article
-        loadArticle(link).then(function (metadata) {
-            if (metadata) {
-                process(metadata, lang, maxLink).then(function (links) {
+    if (aticleQueue.length == 0 ) {
+        processLinksAlgorithm()
+        updating = false;
+        return;
+    };
+    var article = aticleQueue.pop();
+    if(!article) return;
+    updating = true;
+    var name = article[0];
+    addToScroll(3000, name);
+    var currentDepth = article[1];
+    if (currentDepth > depth) return;
+    process(name, lang, maxLink).then(function (links) {
+        // process all links
+        links.forEach(link => {
+            aticleQueue.unshift([link, currentDepth++]);
+        });
+    });
+}
 
-                    // process all links
-                    for (var j = 0; j < links.length; j++) {
-                        var linkName = links[j].page();
-                        loadArticle(linkName);
-                        if (j % 100 == 0) processArticleLink(articleLink);
 
-                    }
-                });
-            }
-        })
+/* 
+    for each article, find all links between him and all existing article in dictionary O(n2)  
+*/
+function processLinksAlgorithm() {
+    if (!updating) return;
+    // main loop
+    dictionaryArticleLinks.forEach((links, name) => { 
+        searchLinks(name); 
+    })
+    // display result
+
+    ls = []
+
+    linkRankDict.forEach((links, name) => { 
+        ls.push({text:name, size:links.length})
+    })
+
+    displayWordCloud(ls)
+}
+
+function searchLinks(name1) {
+    dictionaryArticleLinks.forEach((links, name2) => {
+        if (name1 != name2) {
+            links.forEach(link => {
+                if (name1 == link) { // we found a link between two article (name1, name2) 
+                    addIntraLink(name1, name2);
+                }
+            });
+        }
+    });
+}
+
+
+function addIntraLink(source, dest) {
+    if (linkRankDict.has(source)) {
+        var list = linkRankDict.get(source);
+        if (!list.includes(dest)) list.push(dest);
+        linkRankDict.set(source, list)
+    } else {
+        linkRankDict.set(source, [dest]);
     }
 }
 
-/* 
-    for each link in the base article, get all the links
 
-*/
-function processArticleLink(articleLink) {
-    console.log("buliding metadata links");
-    if (searching) return;
-    searching = true;
-    var count = 0;
-    articles = articleLink;
-    clearMLinks();
-    var interval = setInterval(() => {
-        if (count == articles.length) {
-            clearInterval(interval);
-            searching = false;
-            restartVisualisation(true);
+// USER INTERFACE
 
-        } else {
-            // main loop
-            var article = articles[count];
-            loadArticleLink(article);
-        }
-        count++;
-    }, articleLinkIntervalfloat);
+function addToScroll(fade, name) {
+    var spanner = $('<span class="scroll">' + name + '<br/></span>')
+    $('#listing').append(spanner);
+    $('#listing>span').fadeOut(fade, function () {
+        $(this).remove();
+    });
 }
+
+
+
+
+
+
+
 
 
